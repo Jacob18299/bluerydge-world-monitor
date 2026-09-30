@@ -1,0 +1,20 @@
+I have a single self-contained file called index.html in this folder. It's a finished
+dashboard (the Bluerydge World Monitor) — do NOT modify its design or contents.
+
+I want to publish it to the web using Cloudflare Pages, on my existing Cloudflare account
+(the same one I used for my newsletter Worker — no new signups).
+
+Please do all of this for me, step by step, pausing whenever you need me to click something
+or sign in:
+
+1. Confirm index.html is in the current folder and is the file we'll deploy.
+2. Use Wrangler (Cloudflare's CLI) to create a new Cloudflare Pages project and deploy
+   index.html to it. The folder I want to publish is this one (it contains index.html).
+3. If I'm not logged in to Cloudflare, walk me through `wrangler login`.
+4. When it's deployed, give me the live https://<project>.pages.dev URL and tell me to open it.
+5. Tell me, in plain English, exactly how to re-deploy if I ever change the file.
+
+Important:
+- Treat index.html as final and read-only. Don't edit, reformat, or "optimise" it.
+- Use the free Cloudflare Pages tier.
+- Explain each command before you run it, in non-technical terms, since I'm new to this.

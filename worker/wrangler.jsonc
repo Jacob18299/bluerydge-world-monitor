@@ -1,0 +1,33 @@
+{
+  // Bluerydge World Monitor — live-data collector Worker.
+  // Runs on a schedule, fetches public threat/news/geopolitical feeds,
+  // normalises them into the dashboard's shapes, and stores one JSON blob in KV.
+  // It also serves that blob at /api/signals (with CORS) so the dashboard can read it.
+  "name": "bluerydge-monitor-cron",
+  "main": "src/index.js",
+  "compatibility_date": "2024-11-01",
+
+  // Refresh every 15 minutes (free-tier safe).
+  "triggers": { "crons": ["*/15 * * * *"] },
+
+  // Shared key/value store. Same namespace the dashboard reads from.
+  "kv_namespaces": [
+    { "binding": "SIGNALS", "id": "1dcf195abfc14627bb5dfd8e1b54883e" }
+  ],
+
+  // Free Workers AI — powers the dashboard's chat assistant.
+  "ai": { "binding": "AI" },
+
+  // Persistent memory — D1 database (structured, queryable history).
+  "d1_databases": [
+    { "binding": "DB", "database_name": "bluerydge-monitor", "database_id": "fad20a2b-53be-483c-81d0-127be7abea7e" }
+  ],
+
+  // Cold archive — R2 bucket for raw feed snapshots + historical aircraft positions.
+  // D1 stays the structured/queryable store; R2 holds the bulky raw JSON per run.
+  "r2_buckets": [
+    { "binding": "ARCHIVE", "bucket_name": "bluerydge-monitor-archive" }
+  ],
+
+  "observability": { "enabled": true }
+}

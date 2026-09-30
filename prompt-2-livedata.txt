@@ -1,0 +1,36 @@
+PHASE 2 — wire the World Monitor dashboard to live data.
+
+Context: I have a published dashboard (index.html on Cloudflare Pages) called the Bluerydge
+World Monitor. Right now its signals (the threat events on the map and in the feed) are
+representative sample data baked into the file. I want to replace that with real, live data
+that refreshes automatically — WITHOUT changing the dashboard's design or layout.
+
+What I want you to build:
+1. A Cloudflare Worker (free tier) on a cron schedule (e.g. every 15–30 minutes) that:
+   - Fetches from a small set of public sources I'll choose with you. Good starting candidates:
+     * CISA Known Exploited Vulnerabilities (KEV) feed — for the vulnerabilities section.
+     * NVD / CVE feeds — for severity + CVSS.
+     * A few cyber/news RSS feeds (e.g. The Hacker News, BleepingComputer, government CERT advisories).
+     * GDELT or an equivalent for geopolitical/conflict events with locations.
+   - Normalises each item into the shape the dashboard already uses for a "signal":
+        { id, title, region, lat, lon, sev (CRITICAL|HIGH|MED|LOW), cat (category key),
+          time (relative), source, url }
+     and for vulnerabilities:
+        { name, cve, sev, cvss, status, published, desc, vector, affected, action }
+   - Geocodes/maps each item to a lat/lon and a region bucket
+     (Middle East, Asia-Pacific, Europe, Australia, North America, South America, Africa)
+     so it plots on the map and feeds the Regional Risk Index.
+   - Writes the combined result as JSON to Cloudflare KV (or R2), e.g. a key like "signals-latest".
+2. A simple read endpoint (Worker route or Pages Function) that serves that JSON with CORS
+   enabled, e.g. GET /api/signals.
+
+Then, the ONLY change to the dashboard: on load, fetch /api/signals and use it in place of the
+baked-in sample arrays (EVENTS, VULNS, regions). Keep every visual, color, filter, mission,
+layer, breaking-news ticker and the AI assistant exactly as they are. If the fetch fails, fall
+back to the existing sample data so the page never looks broken.
+
+Please:
+- Start by proposing the exact list of sources and confirming the cron frequency with me.
+- Explain the severity-scoring and region-mapping rules in plain English before coding them.
+- Stay on Cloudflare's free tier.
+- Pause for sign-ins / approvals and explain commands as you go — I'm non-technical.
